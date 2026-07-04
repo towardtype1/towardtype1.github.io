@@ -1,11 +1,33 @@
 ---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { memoNumbers } from '../lib/memo';
+import { SITE_TITLE, TAGLINE } from '../consts';
+
+const essays = await getCollection('essays');
+const memos = memoNumbers(essays.map((e) => ({ id: e.id, date: e.data.date })));
+const sorted = [...essays].sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Toward Type 1</title>
-  </head>
-  <body>
-    <h1>Toward Type 1</h1>
-  </body>
-</html>
+
+<Base title={SITE_TITLE} description={TAGLINE}>
+  <main>
+    <header class="masthead">
+      <h1>{SITE_TITLE}</h1>
+      <p class="tagline">{TAGLINE}</p>
+    </header>
+    <ol class="register">
+      {
+        sorted.map((essay) => (
+          <li>
+            <a href={`/essays/${essay.id}/`}>
+              <span class="meta">{memos.get(essay.id)}</span>
+              <span class="title">{essay.data.title}</span>
+              <span class="meta">{essay.data.date.toISOString().slice(0, 10)}</span>
+              <p class="desc">{essay.data.description}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </main>
+</Base>

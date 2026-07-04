@@ -1,0 +1,238 @@
+:root {
+  --paper: #efe9dc;
+  --ink: #23211c;
+  --accent: #8a1f11;
+  --muted: #6b6558;
+  --code-bg: #191712;
+  --serif: Charter, Georgia, serif;
+  --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, Menlo, Monaco, "Courier New", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1e1b16;
+    --ink: #e9e2d2;
+    --accent: #e0704f;
+    --muted: #9b9585;
+    --code-bg: #14120e;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  line-height: 1.68;
+}
+
+a {
+  color: var(--accent);
+}
+
+.page {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+/* Memo header: double-ruled document bar */
+.doc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-bottom: 3px double var(--ink);
+  padding-bottom: 0.55rem;
+  margin-bottom: 2rem;
+}
+
+.doc-head .site {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.doc-head .site:hover {
+  color: var(--accent);
+}
+
+/* Homepage register */
+.masthead h1 {
+  font-family: var(--sans);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  font-size: 2.3rem;
+  line-height: 1.1;
+  margin: 0 0 0.4rem;
+  text-wrap: balance;
+}
+
+.masthead .tagline {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0 0 2.5rem;
+}
+
+.register {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.register li {
+  border-top: 1px solid var(--ink);
+}
+
+.register li:last-child {
+  border-bottom: 1px solid var(--ink);
+}
+
+.register a {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.15rem 1.25rem;
+  padding: 0.9rem 0.2rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.register .meta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.register .title {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.register a:hover .title {
+  color: var(--accent);
+}
+
+.register .desc {
+  grid-column: 2;
+  font-size: 0.92rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Essay page */
+.essay h1 {
+  font-family: var(--sans);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  font-size: 2.1rem;
+  line-height: 1.15;
+  margin: 0 0 0.5rem;
+  text-wrap: balance;
+}
+
+.essay .byline {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 2rem;
+}
+
+.essay .byline em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.essay .body {
+  font-size: 1.02rem;
+}
+
+.essay .body h2,
+.essay .body h3 {
+  font-family: var(--sans);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 2.2rem 0 0.6rem;
+}
+
+.essay .body pre {
+  background: var(--code-bg) !important;
+  padding: 1rem 1.1rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  overflow-x: auto;
+  margin: 1.3rem 0;
+}
+
+.essay .body :not(pre) > code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  color: var(--accent);
+}
+
+.essay .body figure {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 0.9rem 0.2rem;
+  margin: 1.5rem 0;
+}
+
+.essay .body figure pre {
+  background: none !important;
+  color: var(--ink);
+  padding: 0;
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.essay .body figcaption {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0.6rem;
+}
+
+.essay .body blockquote {
+  border-left: 3px solid var(--accent);
+  margin: 1.3rem 0;
+  padding: 0.2rem 0 0.2rem 1rem;
+  color: var(--muted);
+}
+
+/* Boot-log footer */
+.bootlog {
+  margin-top: 3.5rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 0.8rem;
+}
+
+.bootlog p {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: 0;
+}
