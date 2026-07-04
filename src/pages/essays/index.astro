@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import SiteNav from '../../components/SiteNav.astro';
+import { memoNumbers } from '../../lib/memo';
+import { SITE_TITLE, TAGLINE } from '../../consts';
+
+const essays = await getCollection('essays');
+const memos = memoNumbers(essays.map((e) => ({ id: e.id, date: e.data.date })));
+const sorted = [...essays].sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime() || b.id.localeCompare(a.id),
+);
+---
+
+<Base title={`Essays · ${SITE_TITLE}`} description={TAGLINE}>
+  <main>
+    <SiteNav current="essays" />
+    <header class="masthead">
+      <h1>Essays</h1>
+      <p class="tagline">{TAGLINE}</p>
+    </header>
+    <ol class="register">
+      {
+        sorted.map((essay) => (
+          <li>
+            <a href={`/essays/${essay.id}/`}>
+              <span class="meta">{memos.get(essay.id)}</span>
+              <span class="title">{essay.data.title}</span>
+              <span class="meta">{essay.data.date.toISOString().slice(0, 10)}</span>
+              <p class="desc">{essay.data.description}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </main>
+</Base>
