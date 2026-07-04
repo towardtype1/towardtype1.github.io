@@ -1,11 +1,10 @@
 import { COMPUTE_DATA } from '../data/compute';
-import { TYPE1_WATTS } from './energy';
 
 const YEAR_SECONDS = 365.25 * 24 * 3600;
 const YEAR_MS = YEAR_SECONDS * 1000;
 
-export function type1ComputeFlops(): number {
-  return TYPE1_WATTS * COMPUTE_DATA.frontierFlopPerJoule;
+export function brainParityFlops(): number {
+  return COMPUTE_DATA.flopsPerBrain * COMPUTE_DATA.population;
 }
 
 export function currentAiFlops(now: Date): number {
@@ -20,12 +19,12 @@ export function flopToday(now: Date): number {
 }
 
 export function computeProgress(flops: number): number {
-  return flops / type1ComputeFlops();
+  return flops / brainParityFlops();
 }
 
-export function type1ComputeEtaYear(): number {
+export function parityEtaYear(): number {
   const years =
-    Math.log(type1ComputeFlops() / COMPUTE_DATA.aiFlopsBase) /
+    Math.log(brainParityFlops() / COMPUTE_DATA.aiFlopsBase) /
     Math.log(COMPUTE_DATA.growthFactorPerYear);
   return Math.round(new Date(COMPUTE_DATA.anchorUtc).getUTCFullYear() + years);
 }

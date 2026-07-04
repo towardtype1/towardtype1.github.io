@@ -1,20 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import { COMPUTE_DATA } from '../data/compute';
-import { TYPE1_WATTS } from './energy';
 import {
+  brainParityFlops,
   computeProgress,
   currentAiFlops,
   flopToday,
+  parityEtaYear,
   sciParts,
-  type1ComputeEtaYear,
-  type1ComputeFlops,
 } from './compute';
 
 const YEAR_MS = 365.25 * 24 * 3600 * 1000;
 
-describe('type1ComputeFlops', () => {
-  it('is the Type 1 energy budget at frontier efficiency', () => {
-    expect(type1ComputeFlops()).toBe(TYPE1_WATTS * COMPUTE_DATA.frontierFlopPerJoule);
+describe('brainParityFlops', () => {
+  it('is the population times per-brain compute', () => {
+    expect(brainParityFlops()).toBe(COMPUTE_DATA.flopsPerBrain * COMPUTE_DATA.population);
   });
 });
 
@@ -39,23 +38,23 @@ describe('flopToday', () => {
 });
 
 describe('computeProgress', () => {
-  it('is 1 at the Type 1 compute budget', () => {
-    expect(computeProgress(type1ComputeFlops())).toBe(1);
+  it('is 1 at brain parity', () => {
+    expect(computeProgress(brainParityFlops())).toBe(1);
   });
 });
 
-describe('type1ComputeEtaYear', () => {
+describe('parityEtaYear', () => {
   it('projects the crossing year from the constants', () => {
     const years =
-      Math.log(type1ComputeFlops() / COMPUTE_DATA.aiFlopsBase) /
+      Math.log(brainParityFlops() / COMPUTE_DATA.aiFlopsBase) /
       Math.log(COMPUTE_DATA.growthFactorPerYear);
     const expected = Math.round(new Date(COMPUTE_DATA.anchorUtc).getUTCFullYear() + years);
-    expect(type1ComputeEtaYear()).toBe(expected);
+    expect(parityEtaYear()).toBe(expected);
   });
 
   it('lands in a plausible window', () => {
-    expect(type1ComputeEtaYear()).toBeGreaterThan(2026);
-    expect(type1ComputeEtaYear()).toBeLessThan(2100);
+    expect(parityEtaYear()).toBeGreaterThan(2026);
+    expect(parityEtaYear()).toBeLessThan(2100);
   });
 });
 

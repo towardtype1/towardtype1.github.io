@@ -1,18 +1,21 @@
 // Global AI compute stock. Bump AI_FLOPS_BASE, ANCHOR_YEAR, and
 // GROWTH_FACTOR_PER_YEAR when Epoch AI publishes updated estimates.
-const AI_FLOPS_BASE = 1.5e22; // FLOP/s, ~15M H100-equivalents installed (Epoch AI, Jan 2026) at ~1e15 FLOP/s dense FP16 per H100
+// Bump POPULATION when it drifts meaningfully.
+const AI_FLOPS_BASE = 1.5e22; // FLOP/s, global AI compute stock in ANCHOR_YEAR (Epoch AI, ~15M H100e, dense FP16 basis)
 const ANCHOR_YEAR = 2026;
-const GROWTH_FACTOR_PER_YEAR = 3.3; // Epoch AI: aggregate AI compute stock growth since 2022
-const FRONTIER_FLOP_PER_JOULE = 1.4e12; // NVIDIA H100 dense FP16 (Epoch AI)
+const GROWTH_FACTOR_PER_YEAR = 3.3;
+const FLOPS_PER_BRAIN = 1e15; // Carlsmith (Open Philanthropy, 2020) median estimate
+const POPULATION = 8.2e9; // world population, 2026
 
 const SUP_DIGITS = '⁰¹²³⁴⁵⁶⁷⁸⁹';
 const sup = (n: number) => String(n).split('').map((d) => SUP_DIGITS[Number(d)]).join('');
-const FRONTIER_EXP = Math.floor(Math.log10(FRONTIER_FLOP_PER_JOULE));
+const BRAIN_EXP = Math.floor(Math.log10(FLOPS_PER_BRAIN));
 
 export const COMPUTE_DATA = {
   aiFlopsBase: AI_FLOPS_BASE,
   anchorUtc: Date.UTC(ANCHOR_YEAR, 6, 2), // July 2 (month is 0-indexed)
   growthFactorPerYear: GROWTH_FACTOR_PER_YEAR,
-  frontierFlopPerJoule: FRONTIER_FLOP_PER_JOULE,
-  sourceLabel: `Est. global AI compute stock per Epoch AI (${ANCHOR_YEAR}) at ~${GROWTH_FACTOR_PER_YEAR}x/yr · Type 1 budget = 10¹⁶ W at frontier efficiency ~10${sup(FRONTIER_EXP)} FLOP/J`,
+  flopsPerBrain: FLOPS_PER_BRAIN,
+  population: POPULATION,
+  sourceLabel: `Est. global AI compute stock per Epoch AI (${ANCHOR_YEAR}) at ~${GROWTH_FACTOR_PER_YEAR}x/yr · brain ≈ 10${sup(BRAIN_EXP)} FLOP/s (Carlsmith 2020) × ${(POPULATION / 1e9).toFixed(1)}B people`,
 } as const;
