@@ -258,17 +258,6 @@ Train on a frozen pool of 8 questions for 20 steps; if the loop can learn at all
 It did: from ~0.06 to ~0.44 on the hard questions and ~0.5 to ~0.9 on the easy ones, with bounded KL.
 Only then did the full run get launched.
 
-## Watching it learn
-
-Numbers summarise; samples teach.
-The repo's report (`gsm/report.py`) renders three things from the training logs into one HTML page:
-
-- **Curves**: loss, reward, KL, gradient norms over time.
-- **Probe evolution**: the same 10 questions answered at every checkpoint, side by side - you watch rambling become format become correct solutions.
-- **Group inspector**: real GRPO groups with each answer's reward and advantage, so you can see exactly what a policy-gradient step pushes on.
-
-If you clone the repo and run the pipeline, this report is where the understanding happens.
-
 ## Where it stands
 
 | Checkpoint | GSM8K zero-shot |
