@@ -6,7 +6,9 @@ import { SITE_TITLE, TAGLINE } from '../consts';
 
 const essays = await getCollection('essays');
 const memos = memoNumbers(essays.map((e) => ({ id: e.id, date: e.data.date })));
-const sorted = [...essays].sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const sorted = [...essays].sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime() || b.id.localeCompare(a.id),
+);
 ---
 
 <Base title={SITE_TITLE} description={TAGLINE}>
