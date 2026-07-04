@@ -24,7 +24,9 @@ const initialPct = (progressToType1(watts) * 100).toFixed(3) + '%';
 const flops = currentAiFlops(now);
 const sci = sciParts(flopToday(now));
 const capacityExp = Math.log10(flops).toFixed(1);
-const budgetExp = Math.round(Math.log10(type1ComputeFlops()));
+const budgetSci = sciParts(type1ComputeFlops());
+const budgetMantissa = Number(budgetSci.mantissa).toFixed(1);
+const budgetExp = budgetSci.exponent;
 const computePctValue = computeProgress(flops) * 100;
 const computePct = computePctValue.toPrecision(1) + '%';
 const etaYear = type1ComputeEtaYear();
@@ -73,7 +75,7 @@ const etaYear = type1ComputeEtaYear();
     </div>
     <div class="cell">
       <p class="label">Type 1 budget</p>
-      <div class="value">10<sup>{budgetExp}</sup> FLOP/s</div>
+      <div class="value">{budgetMantissa} × 10<sup>{budgetExp}</sup> FLOP/s</div>
     </div>
     <div class="cell">
       <p class="label">At current growth</p>
@@ -83,7 +85,7 @@ const etaYear = type1ComputeEtaYear();
   <div class="gauge">
     <div class="gauge-head">
       <p class="label">Progress to Type 1 compute</p>
-      <span class="reading">10<sup data-cap-exp2>{capacityExp}</sup> / 10<sup>{budgetExp}</sup> FLOP/s · <span class="pct" data-compute-pct>{computePct}</span></span>
+      <span class="reading">10<sup data-cap-exp2>{capacityExp}</sup> / {budgetMantissa} × 10<sup>{budgetExp}</sup> FLOP/s · <span class="pct" data-compute-pct>{computePct}</span></span>
     </div>
     <div class="track"><div class="fill" data-compute-fill style={`width: ${computePctValue}%`}></div></div>
     <div class="scale"><span>Type 0</span><span>Planetary energy budget as compute · Type 1</span></div>
