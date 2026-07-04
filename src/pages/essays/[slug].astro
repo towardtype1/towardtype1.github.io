@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from 'astro:content';
+import Essay from '../../layouts/Essay.astro';
+import { memoNumbers } from '../../lib/memo';
+import { readingTime } from '../../lib/reading-time';
+
+export async function getStaticPaths() {
+  const essays = await getCollection('essays');
+  const memos = memoNumbers(essays.map((e) => ({ id: e.id, date: e.data.date })));
+  return essays.map((essay) => ({
+    params: { slug: essay.id },
+    props: { essay, memo: memos.get(essay.id)! },
+  }));
+}
+
+const { essay, memo } = Astro.props;
+const { Content } = await render(essay);
+const minutes = readingTime(essay.body ?? '');
+---
+
+<Essay
+  title={essay.data.title}
+  description={essay.data.description}
+  date={essay.data.date}
+  memo={memo}
+  minutes={minutes}
+>
+  <Content />
+</Essay>

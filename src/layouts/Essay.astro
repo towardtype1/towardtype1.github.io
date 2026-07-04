@@ -1,0 +1,33 @@
+---
+import Base from './Base.astro';
+import { SITE_TITLE, TAGLINE, AUTHOR } from '../consts';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  memo: string;
+  minutes: number;
+}
+
+const { title, description, date, memo, minutes } = Astro.props;
+const dateStr = date.toISOString().slice(0, 10);
+---
+
+<Base title={`${title} · ${SITE_TITLE}`} description={description}>
+  <article class="essay">
+    <header class="doc-head">
+      <a class="site" href="/">{SITE_TITLE}</a>
+      <span>Memo № {memo}</span>
+      <span>{TAGLINE}</span>
+    </header>
+    <h1>{title}</h1>
+    <p class="byline">By {AUTHOR} · <em>{dateStr}</em> · {minutes} min read</p>
+    <div class="body">
+      <slot />
+    </div>
+    <footer class="bootlog">
+      <p>&gt; end of transmission · {memo} · <a href="/">return to index</a></p>
+    </footer>
+  </article>
+</Base>
