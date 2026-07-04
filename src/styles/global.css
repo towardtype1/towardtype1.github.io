@@ -9,16 +9,6 @@
   --mono: ui-monospace, Menlo, Monaco, "Courier New", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #1e1b16;
-    --ink: #e9e2d2;
-    --accent: #e0704f;
-    --muted: #9b9585;
-    --code-bg: #14120e;
-  }
-}
-
 * {
   box-sizing: border-box;
 }
@@ -86,7 +76,63 @@ a {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted);
-  margin: 0 0 2.5rem;
+  margin: 0 0 1.6rem;
+}
+
+/* Energy instrument panel */
+.energy-panel {
+  border-top: 3px double var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 1rem 0.2rem 0.9rem;
+  margin: 0 0 2.2rem;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.energy-panel .label {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.25rem;
+}
+
+.energy-panel .odometer {
+  font-size: clamp(1.05rem, 3.4vw, 1.7rem);
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.energy-panel .odometer .unit {
+  color: var(--ink);
+  font-weight: 400;
+  font-size: 0.72em;
+}
+
+.energy-panel .row {
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+}
+
+.energy-panel .cell .value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.energy-panel .caption {
+  margin-top: 0.9rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .register {

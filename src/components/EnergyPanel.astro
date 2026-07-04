@@ -1,0 +1,52 @@
+---
+import { ENERGY_DATA } from '../data/energy';
+import { currentPowerWatts, joulesToday, kardashev } from '../lib/energy';
+
+const now = new Date();
+const watts = currentPowerWatts(now);
+const fmt = new Intl.NumberFormat('en-US');
+const initialJoules = fmt.format(Math.round(joulesToday(now)));
+const initialTw = (watts / 1e12).toFixed(2);
+const initialK = kardashev(watts).toFixed(4);
+---
+
+<div class="energy-panel">
+  <p class="label">Energy produced today · local</p>
+  <div class="odometer"><span data-joules>{initialJoules}</span> <span class="unit">J</span></div>
+  <div class="row">
+    <div class="cell">
+      <p class="label">Output</p>
+      <div class="value"><span data-tw>{initialTw}</span> TW</div>
+    </div>
+    <div class="cell">
+      <p class="label">Kardashev rating</p>
+      <div class="value">K = <span data-k>{initialK}</span></div>
+    </div>
+    <div class="cell">
+      <p class="label">Type 1 target</p>
+      <div class="value">10¹⁶ W</div>
+    </div>
+  </div>
+  <p class="caption">{ENERGY_DATA.sourceLabel}</p>
+</div>
+
+<script>
+  import { currentPowerWatts, joulesToday, kardashev } from '../lib/energy';
+
+  const joulesEl = document.querySelector('[data-joules]')!;
+  const twEl = document.querySelector('[data-tw]')!;
+  const kEl = document.querySelector('[data-k]')!;
+  const fmt = new Intl.NumberFormat('en-US');
+
+  function tick() {
+    const now = new Date();
+    const watts = currentPowerWatts(now);
+    joulesEl.textContent = fmt.format(Math.round(joulesToday(now)));
+    twEl.textContent = (watts / 1e12).toFixed(2);
+    kEl.textContent = kardashev(watts).toFixed(4);
+  }
+
+  tick();
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  setInterval(tick, reduced ? 1000 : 150);
+</script>
