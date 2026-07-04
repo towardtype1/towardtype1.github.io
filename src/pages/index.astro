@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { memoNumbers } from '../lib/memo';
 import { SITE_TITLE, TAGLINE } from '../consts';
-import EnergyPanel from '../components/EnergyPanel.astro';
+import InstrumentPanel from '../components/InstrumentPanel.astro';
 
 const essays = await getCollection('essays');
 const memos = memoNumbers(essays.map((e) => ({ id: e.id, date: e.data.date })));
@@ -18,7 +18,7 @@ const sorted = [...essays].sort(
       <h1>{SITE_TITLE}</h1>
       <p class="tagline">{TAGLINE}</p>
     </header>
-    <EnergyPanel />
+    <InstrumentPanel />
     <ol class="register">
       {
         sorted.map((essay) => (

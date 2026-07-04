@@ -194,6 +194,31 @@ a {
   margin-top: 0.3rem;
 }
 
+.energy-panel .section-title {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 700;
+  margin: 0 0 0.55rem;
+}
+
+.energy-panel .section-title .axis {
+  color: var(--accent);
+}
+
+.energy-panel .section-break {
+  border: 0;
+  border-top: 1px solid var(--ink);
+  margin: 1.4rem -0.2rem 1.1rem;
+}
+
+.energy-panel .odometer sup,
+.energy-panel .value sup,
+.energy-panel .reading sup {
+  font-size: 0.6em;
+}
+
 .register {
   list-style: none;
   margin: 0;
