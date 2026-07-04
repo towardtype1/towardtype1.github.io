@@ -31,4 +31,4 @@ Type 1.0   ███████████████████████
 </figure>
 
 The remaining 0.27 is not a rounding error: it is a 500-fold increase in throughput.
-This blog is about what closing that gap looks like - the reactors, panels, grids, and ideas that move the number.
+This blog is about what moves those needles - the reactors, panels, and grids that grow the energy budget; the chips and models that grow what we can do with it; and any idea that makes the sci-fi future arrive early.
