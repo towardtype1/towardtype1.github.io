@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { currentPowerWatts, joulesToday, kardashev } from './energy';
+import { TYPE1_WATTS, currentPowerWatts, joulesToday, kardashev, progressToType1 } from './energy';
 import { ENERGY_DATA } from '../data/energy';
 
 const YEAR_SECONDS = 365.25 * 24 * 3600;
@@ -45,5 +45,15 @@ describe('kardashev', () => {
 
   it('matches the hello-world essay value for 2e13 W', () => {
     expect(kardashev(2e13)).toBeCloseTo(0.7301, 4);
+  });
+});
+
+describe('progressToType1', () => {
+  it('is 1 at the Type 1 threshold', () => {
+    expect(progressToType1(TYPE1_WATTS)).toBe(1);
+  });
+
+  it('is 0.002 at the hello-world essay power', () => {
+    expect(progressToType1(2e13)).toBe(0.002);
   });
 });

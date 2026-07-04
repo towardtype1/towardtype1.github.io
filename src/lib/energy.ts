@@ -18,3 +18,9 @@ export function joulesToday(now: Date): number {
 export function kardashev(watts: number): number {
   return (Math.log10(watts) - 6) / 10;
 }
+
+export const TYPE1_WATTS = 1e16;
+
+export function progressToType1(watts: number): number {
+  return watts / TYPE1_WATTS;
+}

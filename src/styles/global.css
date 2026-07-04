@@ -136,6 +136,64 @@ a {
   color: var(--muted);
 }
 
+.energy-panel .gauge {
+  margin-top: 0.95rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+}
+
+.energy-panel .gauge-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.energy-panel .gauge-head .label {
+  margin: 0;
+}
+
+.energy-panel .reading {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.energy-panel .reading .pct {
+  color: var(--accent);
+}
+
+.energy-panel .track {
+  position: relative;
+  height: 10px;
+  border: 1px solid var(--ink);
+  margin-top: 0.45rem;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 calc(10% - 1px),
+    color-mix(in srgb, var(--ink) 28%, transparent) calc(10% - 1px) 10%
+  );
+}
+
+.energy-panel .fill {
+  position: absolute;
+  inset: 1px auto 1px 1px;
+  width: 0.2%;
+  min-width: 3px;
+  background: var(--accent);
+}
+
+.energy-panel .scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
 .register {
   list-style: none;
   margin: 0;
