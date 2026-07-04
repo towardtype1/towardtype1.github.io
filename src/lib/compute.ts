@@ -32,6 +32,11 @@ export function type1ComputeEtaYear(): number {
 
 export function sciParts(value: number): { mantissa: string; exponent: number } {
   if (value < 1) return { mantissa: '0.00000', exponent: 25 };
-  const exponent = Math.floor(Math.log10(value));
-  return { mantissa: (value / Math.pow(10, exponent)).toFixed(5), exponent };
+  let exponent = Math.floor(Math.log10(value));
+  let mantissa = (value / Math.pow(10, exponent)).toFixed(5);
+  if (mantissa === '10.00000') {
+    exponent += 1;
+    mantissa = '1.00000';
+  }
+  return { mantissa, exponent };
 }

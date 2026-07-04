@@ -67,4 +67,8 @@ describe('sciParts', () => {
   it('guards values below 1', () => {
     expect(sciParts(0)).toEqual({ mantissa: '0.00000', exponent: 25 });
   });
+
+  it('renormalizes when rounding pushes the mantissa to 10', () => {
+    expect(sciParts(9.999999e26)).toEqual({ mantissa: '1.00000', exponent: 27 });
+  });
 });
