@@ -258,16 +258,28 @@ Train on a frozen pool of 8 questions for 20 steps; if the loop can learn at all
 It did: from ~0.06 to ~0.44 on the hard questions and ~0.5 to ~0.9 on the easy ones, with bounded KL.
 Only then did the full run get launched.
 
-## Where it stands
+## Where it landed
+
+The hardened run went the distance: 100 stable steps, KL flat at ~0.05, no collapse.
+Final numbers, on the full 1,319-question test set:
 
 | Checkpoint | GSM8K zero-shot |
 |---|---|
 | Qwen2.5-0.5B base | 0.000 |
-| + SFT | 0.330 |
-| + GRPO (hardened run) | in progress |
+| + SFT | 0.325 |
+| + GRPO | 0.303 |
 
-The final GRPO number matters less than what the three runs demonstrated:
+GRPO did not beat SFT.
+But the logs show something more interesting than a null result.
+Over the run, the model's *sampled* success rate - how often an attempt at temperature 0.8 is correct, which is exactly what the reward measures - climbed from 0.23 to roughly 0.31.
+Its *greedy* accuracy - the single most confident answer, which is what benchmarks measure - never moved (the in-run eval scored the same 12 of 50 questions at steps 20, 40 and 60).
 
-1. **Post-training is behaviour installation.** The knowledge was in the base model; SFT installed "answer and stop"; RL sharpened "be right".
-2. **RL optimises the reward you wrote, not the behaviour you meant.** Every unmeasured behaviour is collateral - that is why the KL leash exists.
-3. **Sanity checks scale down.** Overfit-one-batch, sample logging, gradient-norm logging, and an RL overfit check caught every one of this project's failures early, on hardware that costs less than a conference ticket.
+Read those two facts together: RL genuinely optimised the objective it was given, and the objective was not the benchmark.
+We trained at temperature and graded greedily, with 48 samples per update where production runs use thousands.
+At this scale, GRPO reshuffles probability mass among behaviours the model already has - it selects, rather than teaches - and its selection pressure never reached the argmax path.
+
+What the three runs demonstrated:
+
+1. **Post-training is behaviour installation.** The maths knowledge was in the base model all along (0.305 few-shot, zero training); SFT installed "answer and stop" (+0.325 zero-shot); RL improved the odds of a sampled attempt being right, and nothing else.
+2. **RL optimises the reward you wrote, not the behaviour you meant.** Destructively when unconstrained (two dead runs), and literally when stabilised - it improved sampled success because that is what the reward measured, and left greedy accuracy alone because nothing measured it.
+3. **Sanity checks scale down.** Overfit-one-batch, sample logging, gradient-norm logging, an RL overfit check, and same-slice baselines caught every failure in this project early, on hardware that costs less than a conference ticket.
