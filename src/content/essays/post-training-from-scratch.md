@@ -278,8 +278,51 @@ Read those two facts together: RL genuinely optimised the objective it was given
 We trained at temperature and graded greedily, with 48 samples per update where production runs use thousands.
 At this scale, GRPO reshuffles probability mass among behaviours the model already has - it selects, rather than teaches - and its selection pressure never reached the argmax path.
 
-What the three runs demonstrated:
+That looked like the end of the story.
+It wasn't.
 
-1. **Post-training is behaviour installation.** The maths knowledge was in the base model all along (0.305 few-shot, zero training); SFT installed "answer and stop" (+0.325 zero-shot); RL improved the odds of a sampled attempt being right, and nothing else.
-2. **RL optimises the reward you wrote, not the behaviour you meant.** Destructively when unconstrained (two dead runs), and literally when stabilised - it improved sampled success because that is what the reward measured, and left greedy accuracy alone because nothing measured it.
-3. **Sanity checks scale down.** Overfit-one-batch, sample logging, gradient-norm logging, an RL overfit check, and same-slice baselines caught every failure in this project early, on hardware that costs less than a conference ticket.
+## The LoRA twist
+
+Everything above trained all 494 million weights.
+There is another way: freeze the whole model and inject tiny trainable matrices into each attention layer.
+That is [LoRA](https://arxiv.org/abs/2106.09685), and the entire mechanism is ~20 lines:
+
+```python
+class LoRALinear(nn.Module):          # wraps a frozen linear layer
+    def __init__(self, linear, rank, alpha):
+        self.linear = linear                        # W, frozen, bf16
+        self.lora_a = mx.random.normal((rank, in_dims), scale=1/math.sqrt(in_dims))
+        self.lora_b = mx.zeros((out_dims, rank))    # zero: delta starts at 0
+        self.scale = alpha / rank
+
+    def __call__(self, x):
+        y = self.linear(x)
+        return y + (self.scale * ((x @ self.lora_a.T) @ self.lora_b.T)).astype(y.dtype)
+```
+
+Every update is now confined to a rank-16 subspace: 1,081,344 trainable parameters, 0.2% of the model.
+Intuition says constraining the update space this hard must cost quality.
+Same data, same steps, same eval:
+
+| | SFT | GRPO on top |
+|---|---|---|
+| Full fine-tuning (494M params) | 0.325 | 0.303 |
+| LoRA rank 16 (1.08M params) | 0.345 | **0.416** |
+
+The SFT row: no cost at all (0.345 vs 0.325 is at the edge of noise - call it a match), in a third of the training time, with no fp32 upcast needed - the bf16-AdamW instability lives in the *trained* parameters' optimiser state, and LoRA's are small enough to keep in fp32 for free.
+
+The GRPO row is the result of the whole project.
+The same RL recipe that collapsed once, drifted once, and then merely-held-steady on full fine-tuning gained **seven points** on LoRA - the only run where greedy accuracy genuinely improved (in-run evals: 0.26, 0.28, 0.42, 0.44 against a 0.34 baseline).
+And the drift telemetry says why: KL against the reference hovered at 0.003-0.010 all run, an order of magnitude below full FT's.
+The low-rank constraint is itself a leash - there is simply not enough room in a rank-16 subspace to strip-mine distant behaviours, so the noisy 48-samples-per-update gradient could only spend its budget near the reward.
+
+So the earlier conclusion needs an honest amendment.
+RL at laptop scale is not doomed to reshuffle - it worked, decisively, once the update space was constrained tightly enough for its noisy signal.
+Full fine-tuning gave the noise 494 million directions to do damage in; LoRA gave it a million, mostly pointing somewhere useful.
+
+## What the six runs demonstrated
+
+1. **Post-training is behaviour installation.** The maths knowledge was in the base model all along (0.305 few-shot, zero training); SFT installed "answer and stop"; RL - properly constrained - taught the model to lead with its best attempt (0.416).
+2. **RL optimises the reward you wrote, not the behaviour you meant.** Destructively when unconstrained (two dead runs), inertly when merely stabilised (the flat full-FT run), and productively only when the trainable space itself was small enough to aim (the LoRA run).
+3. **Constraints are not compromises.** LoRA looked like the budget option and beat the full-parameter version on both stages - fewer knobs meant less noise damage, not less learning.
+4. **Sanity checks scale down.** Overfit-one-batch, sample logging, gradient-norm logging, RL overfit gates, and same-slice baselines caught every failure in this project early, on hardware that costs less than a conference ticket.
