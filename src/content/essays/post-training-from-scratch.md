@@ -313,7 +313,7 @@ The SFT row: no cost at all (0.345 vs 0.325 is at the edge of noise - call it a 
 
 The GRPO row is the result of the whole project.
 The same RL recipe that collapsed once, drifted once, and then merely-held-steady on full fine-tuning gained **seven points** on LoRA - the only run where greedy accuracy genuinely improved (in-run evals: 0.26, 0.28, 0.42, 0.44 against a 0.34 baseline).
-And the drift telemetry says why: KL against the reference hovered at 0.003-0.010 all run, an order of magnitude below full FT's.
+And the drift telemetry says why: KL against the reference averaged 0.008 all run, roughly six times below the full-FT stable run's 0.048.
 The low-rank constraint is itself a leash - there is simply not enough room in a rank-16 subspace to strip-mine distant behaviours, so the noisy 48-samples-per-update gradient could only spend its budget near the reward.
 
 So the earlier conclusion needs an honest amendment.
